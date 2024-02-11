@@ -1,41 +1,38 @@
-
-
 import java.io.IOException;
 import java.util.Formatter;
 import java.util.Scanner;
 
-public class RetoDos {
-    // ! Scanner is declared as a static variable because it needs to be closed in one point of the code, and closing it before ending a complete cycle of execution can lead to errors.
+public class Reto2 {
     private static Scanner entrada;
-    // ! Main method exec()
-    public static void exec() throws IOException{
+    
+    public static void main(String[] args) throws IOException{
         entrada = new Scanner(System.in);
         
         System.out.println("Elija una de las siguientes opciones:\n1. Calculadora de promedio final\n2. Programa de venta de cajas");
         switch(entrada.nextInt()){
             case 1->{ // * Case 1
                 
-                int nCal;
+                int Cal;
                 float promedio = 0;
-                Formatter promFinal = new Formatter(); // 
-                
+                Formatter promFinal = new Formatter(); // * Init a Formatter object to give format to the result of the operation.
+                //* Data input
                 System.out.println("¿Cuantas calificaciones desea promediar?: ");
-                nCal = entrada.nextInt();
+                Cal = entrada.nextInt();
                 
-                for(int i = 1; i <= nCal; i++){
+                for(int i = 1; i <= Cal; i++){
                     System.out.println("Ingrese la calificacion #" + i + ": ");
                     promedio += entrada.nextFloat();
                 }
                 
-                promedio /= nCal;
+                promedio /= Cal;
                 promFinal.format("%.1f", promedio);
                 //* Result output
                 System.out.println("El promedio final del alumno es de: " + promFinal.toString());
-                promFinal.close(); // ! Formatter object closing func.
+                promFinal.close(); 
             }
             case 2->{ // * Case 2
-                // ! Since we are using a private class inside the public class "RetoDos" we need to declare a RetoDos object and then declaree a PuntoDeVenta object. 
-                RetoDos rtd = new RetoDos();
+                 
+                Reto2 rtd = new Reto2();
                 PuntoDeVenta programa = rtd.new PuntoDeVenta("admin", "admin");
                 programa.start();
             }
@@ -44,28 +41,27 @@ public class RetoDos {
     }
 
     private class PuntoDeVenta{
-        // ! Variables need to stay private because of safety good practices, most of this values do not need to be accesible.
+        
         private String adminUsername, adminPassword;
         private int numVentas, numCompras, operacionesTotales;
         private float balance, ingresosTotales, egresosTotales;
 
-        public PuntoDeVenta(String user, String pass){ // * Class constructor, in other words, the initializer function for any PuntoDeVenta object.
-            // * Initialize the admin user and password, and also set a value of zero to some numeric variables.
+        public PuntoDeVenta(String user, String pass){ 
             this.adminUsername = user;
             this.adminPassword = pass;
             this.balance = 0;
             this.ingresosTotales = 0;
             this.egresosTotales = 0;
         }
-        // ! Main method for the class start()
+        
         public void start(){
-            System.out.println("---- PUNTO DE VENTA v1.0 \"Venta de cajas\" ----");
-            iniciarSesion(); //* The first step in the program is to validate that the user is an authorized administrator
+            System.out.println(" PUNTO DE VENTA \"Venta de cajas\" ----");
+            iniciarSesion(); 
             int opt = 0; 
-            while(opt != 4){ //* The menu needs to show up 'n' times until user specifies the option 4, which is end the program.
-                opt = obtenerOpcion(); //* We show the menu of options everytime we need to know which option the user wants to execute.
-                switch(opt){ // * Possible opt values {1, 2, 3, 4}
-                    case 1->{ // ! Case 1: Buy boxes
+            while(opt != 4){ 
+                opt = obtenerOpcion(); 
+                switch(opt){ 
+                    case 1->{ // sell
                         int nCajas;
                         float costoCajas;
                         //* Data input
@@ -76,10 +72,10 @@ public class RetoDos {
                         //* Result output
                         System.out.println("La compra realizada por " + nCajas + " cajas al costo de $" + costoCajas + " es igual a $" + compra(nCajas, costoCajas));
                     }
-                    case 2->{ // ! Case 2: Sell boxes
+                    case 2->{ // buy
                         int nCajas;
                         float precioCajas;
-                        //* Data input
+                    
                         System.out.println("¿Cuantas cajas se van a vender?");
                         nCajas = entrada.nextInt();
                         System.out.println("Costo por pieza: ");
@@ -87,7 +83,7 @@ public class RetoDos {
                         //* Result output
                         System.out.println("La venta realizada por " + nCajas + " cajas al precio de $" + precioCajas + " es igual a $" + venta(nCajas, precioCajas));
                     }
-                    case 3->{ // ! Case 3: General report
+                    case 3->{ 
                         System.out.println("--- REPORTE GENERAL ---");
                         System.out.println("Balance: " + imprimirBalance(balance));
                         System.out.println("Numero de ventas totales: " + numVentas);
@@ -95,7 +91,7 @@ public class RetoDos {
                         System.out.println("Ingresos totales: $" + ingresosTotales);
                         System.out.println("Egresos totales: $" + egresosTotales);
                     }
-                    case 4->{ // ! Case 4: Exit the program
+                    case 4->{ // exit
                         System.out.println("----------------------");
                         System.out.println("Balance final: " + imprimirBalance(balance));
                         System.out.println("Numero de ventas totales: " + numVentas);
@@ -105,37 +101,30 @@ public class RetoDos {
                         System.out.println("Egresos totales: $" + egresosTotales);
                         System.out.println("--- ¡GRACIAS POR SU CONFIANZA! ---");
                     }
-                    default->{ // ! Default case: No valid option was given
+                    default->{ 
                         System.out.println("Inserte una opcion valida");
                     }
                 }
             }
         }
-        /**
-         * * Validates if the user is authorized to use the program by asking an administrator user and password. 
-         * * The program will not start if the given username and password are not the correct ones.
-         *  
-         */
+        
         private void iniciarSesion(){
             String tempUser = ".";
             String tempPass = ".";
             while(tempUser.equals(this.adminUsername) == false && tempPass.equals(this.adminPassword) == false){
-                System.out.println("Usuario: ");
+                System.out.println("username: ");
                 tempUser = entrada.next();
-                System.out.println("Contrasenia: ");
+                System.out.println("password: ");
                 tempPass = entrada.next();
                 if(tempUser.equals(this.adminUsername) == true && tempPass.equals(this.adminPassword) == true){
-                    System.out.println("Se ha iniciado sesion correctamente.");
+                    System.out.println("a iniciado sesion correctamente.");
                     break;
                 }else{
-                    System.out.println("Los datos introducidos son incorrectos. Intente de nuevo.");
+                    System.out.println("Intenta de nuevo");
                 }
             }
         }
-        /**
-         * Prints a menu with the possible options and asks the user for an Integer input which is later returned.
-         * @return option chosen by the user as an Integer
-         */
+       
         private int obtenerOpcion(){
             System.out.println("----------------------");
             System.out.println("¿Que desea hacer?\n1. Comprar cajas\n2. Vender cajas\n3. Mostrar reporte \n4. Salir del programa");
@@ -143,12 +132,7 @@ public class RetoDos {
             res = entrada.nextInt();
             return res;
         }
-        /**
-         * Calculates the amount of money spent in buying 'n' number of boxes at 'm' cost.
-         * @param cantCajas the quantity of boxes that you are going to buy
-         * @param costCajas the cost of each box
-         * @return total cost of the buying as a float
-         */
+        
         private float compra(int cantCajas, float costCajas){
             float res = (float)(costCajas * cantCajas);
             numCompras++;
@@ -157,12 +141,7 @@ public class RetoDos {
             balance -= res;
             return res;
         }
-        /**
-         * * Calculates the amount of money earned by selling 'n' number of boxes at 'm' cost
-         * @param cantCajas the quantity of boxes that you are going to buy
-         * @param precioCajas the price of each box
-         * @return total earned money of the selling as a float
-         */
+       
         private float venta(int cantCajas, float precioCajas){
             float res = (float)(cantCajas * precioCajas);
             numVentas++;
@@ -171,11 +150,7 @@ public class RetoDos {
             balance += res;
             return res;
         }
-        /**
-         * * Prints in a correct way negative quantities of money with the '$' sign.
-         * @param cantidad the quantity of money that you want to print
-         * @return a String that can or cannot have a negative sign at the start depending of the given params.
-         */
+        
         private String imprimirBalance(float cantidad){
             if(cantidad<0){
                 return (String)("-$"+Math.abs(cantidad));
@@ -183,5 +158,4 @@ public class RetoDos {
                 return (String)("$"+Math.abs(cantidad));
             }
         }
-    }
-}
+    }}
